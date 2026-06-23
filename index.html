@@ -8,129 +8,159 @@
 </head>
 <body>
 
+    <canvas id="starfield"></canvas>
+
+    <div class="planet planet-ring">
+        <div class="planet-body"></div>
+        <div class="ring"></div>
+    </div>
+    <div class="planet planet-small"></div>
+
+    <div class="clouds">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path fill="#3a1d6e" fill-opacity="0.9" d="M0,224L60,213.3C120,203,240,181,360,181.3C480,181,600,203,720,213.3C840,224,960,224,1080,208C1200,192,1320,160,1380,144L1440,128L1440,320L0,320Z"></path>
+        </svg>
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" class="cloud-back">
+            <path fill="#2a1452" fill-opacity="0.85" d="M0,256L80,250.7C160,245,320,235,480,229.3C640,224,800,224,960,234.7C1120,245,1280,267,1360,277.3L1440,288L1440,320L0,320Z"></path>
+        </svg>
+    </div>
+
     <header class="top-bar">
         <div class="brand">
-            <i class="fa-solid fa-leaf logo-icon"></i>
+            <i class="fa-solid fa-shuttle-space logo-icon"></i>
             <span class="brand-name">SpaceLauncher</span>
             <span class="badge-beta">BETA</span>
         </div>
-        
+
         <nav class="nav-links">
-            <button class="nav-btn active" id="nav-launch"><i class="fa-solid fa-rocket"></i> Launch</button>
-            <button class="nav-btn" id="nav-install"><i class="fa-solid fa-download"></i> Install</button>
-            <button class="nav-btn"><i class="fa-solid fa-gear"></i> Settings</button>
-            <button class="nav-btn"><i class="fa-solid fa-ellipsis"></i> More</button>
+            <button class="nav-btn active" id="nav-launch"><i class="fa-solid fa-satellite-dish"></i> Launch</button>
+            <button class="nav-btn" id="nav-install"><i class="fa-solid fa-user-astronaut"></i> Install</button>
+            <button class="nav-btn" id="nav-mods"><i class="fa-solid fa-sliders"></i> Mods</button>
+            <button class="nav-btn"><i class="fa-solid fa-meteor"></i> More</button>
         </nav>
 
         <div class="window-controls">
-            <div class="user-profile"><i class="fa-solid fa-robot"></i></div>
+            <div class="user-profile"><i class="fa-solid fa-user-gear"></i></div>
             <button class="control-btn" id="btn-minimize"><i class="fa-solid fa-minus"></i></button>
             <button class="control-btn btn-close" id="btn-close"><i class="fa-solid fa-xmark"></i></button>
         </div>
     </header>
 
     <main class="main-container">
-        
+
         <div id="view-launch-container">
             <section class="hero-card">
                 <div class="hero-left">
-                    <h1>Minecraft</h1>
-                    <h2>Bedrock Edition</h2>
-                    <p class="tip-text"><i class="fa-regular fa-lightbulb"></i> Use the dropdown on the right to switch versions quickly.</p>
-                </div>
-                
-                <div class="hero-right">
-                    <div class="version-selector">
-                        <span class="v-avatar">M</span>
-                        <div class="v-info">
-                            <label>Current Version</label>
-                            <span>Waydroid (Latest)</span>
+                    <span class="overline">NAVEGUE PELO UNIVERSO</span>
+                    <h1>Start Exploring</h1>
+                    <h1 class="h1-gradient">Infinite <span>Space</span></h1>
+                    <p class="hero-desc">
+                        Pronto para decolar para uma nova sessão estável.
+                        Explore mundos, mods e todos os recursos do seu launcher.
+                    </p>
+
+                    <div class="hero-actions">
+                        <div class="version-selector">
+                            <span class="v-avatar"><i class="fa-solid fa-atom"></i></span>
+                            <div class="v-info">
+                                <label>Ambiente</label>
+                                <span>Waydroid (Latest)</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
                         </div>
-                        <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+
+                        <button id="play-btn" class="btn-launch">
+                            <i class="fa-solid fa-jet-fighter-up"></i> Get Started
+                        </button>
                     </div>
-                    
-                    <button id="play-btn" class="btn-launch">
-                        <i class="fa-solid fa-rocket"></i> Launch
-                    </button>
+                </div>
+
+                <div class="rocket-stage">
+                    <div class="rocket-wrap">
+                        <i class="fa-solid fa-rocket rocket-icon"></i>
+                        <div class="rocket-trail"></div>
+                    </div>
                 </div>
             </section>
+        </div>
 
-            <div class="dashboard-grid" style="margin-top: 20px;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-puzzle-piece" style="color: #7b2cbf;"></i> Mods</h3>
+        <div id="view-install" class="card" style="display:none;">
+            <div class="card-header">
+                <h3><i class="fa-solid fa-satellite" style="color:#e51a62;"></i> Instalação Core do Minecraft Bedrock</h3>
+            </div>
+            <div class="card-content" style="padding:10px 0;">
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:25px;">
+                    Selecione o pacote .apk do Minecraft Bedrock no armazenamento local do seu computador para fazer o upload e a injeção automática no ecossistema Waydroid.
+                </p>
+
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <div style="display:flex; gap:15px; align-items:center;">
+                        <button id="btn-select-file" class="nav-btn" style="background-color:#281845; color:#fff; padding:12px 22px; border-radius:30px; border:1px solid var(--border-color);">
+                            <i class="fa-solid fa-folder-open" style="color:#e51a62;"></i> Localizar Arquivo APK
+                        </button>
+                        <span id="selected-file-path" style="font-size:0.85rem; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:500px;">
+                            Nenhum arquivo APK mapeado...
+                        </span>
                     </div>
-                    <div class="card-content empty-state">
-                        <i class="fa-solid fa-puzzle-piece placeholder-icon"></i>
-                        <p>0 mods found</p>
-                    </div>
+
+                    <button id="btn-start-install" class="btn-launch" style="padding:14px 35px; font-size:0.95rem; width:fit-content;" disabled>
+                        <i class="fa-solid fa-rocket"></i> Iniciar Injeção
+                    </button>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-box-open" style="color: #ff007f;"></i> Content Management</h3>
-                        <span class="view-all">View All <i class="fa-solid fa-arrow-right"></i></span>
-                    </div>
-                    <div class="card-content list-content">
-                        <div class="list-item">
-                            <span><i class="fa-solid fa-globe" style="color: #2196f3;"></i> Worlds</span>
-                            <span class="count">0 <i class="fa-solid fa-chevron-right"></i></span>
-                        </div>
-                        <div class="list-item">
-                            <span><i class="fa-solid fa-image" style="color: #9c27b0;"></i> Resource Packs</span>
-                            <span class="count">0 <i class="fa-solid fa-chevron-right"></i></span>
-                        </div>
-                        <div class="list-item">
-                            <span><i class="fa-solid fa-gears" style="color: #ff9800;"></i> Behavior Packs</span>
-                            <span class="count">0 <i class="fa-solid fa-chevron-right"></i></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-cloud-arrow-down" style="color: #ff5722;"></i> Content Download</h3>
-                    </div>
-                    <div class="card-content list-content">
-                        <div class="list-item provider">
-                            <span><i class="fa-solid fa-fire" style="color: #ff5722;"></i> CurseForge</span>
-                        </div>
-                        <div class="list-item provider">
-                            <span><i class="fa-solid fa-cube" style="color: #4caf50;"></i> Modrinth / Lip</span>
-                        </div>
+                <div id="install-progress-container" style="display:none;">
+                    <p id="install-status-text" style="font-size:0.85rem; color:#ff5c5a; margin-bottom:8px;">Aguardando inicialização da sub-rotina...</p>
+                    <div class="progress-track">
+                        <div id="install-bar"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="view-install" class="card" style="display: none;">
-            <div class="card-header">
-                <h3><i class="fa-solid fa-file-import" style="color: #00b368;"></i> Instalação do Minecraft Bedrock</h3>
-            </div>
-            <div class="card-content" style="padding: 10px 0;">
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                    Selecione o arquivo .apk do Minecraft Bedrock direto do seu computador para realizar a instalação dentro do Waydroid.
-                </p>
-                
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <div style="display: flex; gap: 12px; align-items: center;">
-                        <button id="btn-select-file" class="nav-btn" style="background-color: #262626; color: #fff; padding: 12px 20px; border-radius: 8px;">
-                            <i class="fa-solid fa-folder-open"></i> Selecionar APK
-                        </button>
-                        <span id="selected-file-path" style="font-size: 0.85rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 500px;">
-                            Nenhum arquivo selecionado
-                        </span>
+        <div id="view-mods" style="display:none;">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-flask-vial" style="color:#e51a62;"></i> Mods & Módulos</h3>
                     </div>
-                    
-                    <button id="btn-start-install" class="btn-launch" style="padding: 14px 30px; font-size: 0.95rem; width: fit-content;" disabled>
-                        <i class="fa-solid fa-download"></i> Iniciar Instalação
-                    </button>
+                    <div class="card-content empty-state">
+                        <i class="fa-solid fa-box-open placeholder-icon"></i>
+                        <p>Nenhum módulo injetado</p>
+                    </div>
                 </div>
-                
-                <div id="install-progress-container" style="margin-top: 35px; display: none;">
-                    <p id="install-status-text" style="font-size: 0.85rem; color: #fff; margin-bottom: 8px;">Aguardando início...</p>
-                    <div style="background: #222; width: 100%; height: 6px; border-radius: 4px; overflow: hidden;">
-                        <div id="install-bar" style="background: var(--mc-green); width: 0%; height: 100%; transition: width 0.2s;"></div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-layer-group" style="color:#ff5c5a;"></i> Gestão de Setor</h3>
+                        <span class="view-all">Ver Todos <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                    <div class="card-content list-content">
+                        <div class="list-item">
+                            <span><i class="fa-solid fa-globe" style="color:#e51a62;"></i> Mundos (Saves)</span>
+                            <span class="count">0 <i class="fa-solid fa-chevron-right"></i></span>
+                        </div>
+                        <div class="list-item">
+                            <span><i class="fa-solid fa-wand-magic-sparkles" style="color:#ff5c5a;"></i> Resource Packs</span>
+                            <span class="count">0 <i class="fa-solid fa-chevron-right"></i></span>
+                        </div>
+                        <div class="list-item">
+                            <span><i class="fa-solid fa-brain" style="color:#ff7371;"></i> Behavior Packs</span>
+                            <span class="count">0 <i class="fa-solid fa-chevron-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-terminal" style="color:#e51a62;"></i> Repositórios</h3>
+                    </div>
+                    <div class="card-content list-content">
+                        <div class="list-item provider">
+                            <span><i class="fa-solid fa-fire-flame-curved" style="color:#ff5c5a;"></i> CurseForge Matrix</span>
+                        </div>
+                        <div class="list-item provider">
+                            <span><i class="fa-solid fa-cubes" style="color:#e51a62;"></i> Modrinth Node</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -141,53 +171,110 @@
     <script>
         const { ipcRenderer } = require('electron');
 
-        // Controles das Bordas da Janela Customizada
+        /* ===== CAMPO DE ESTRELAS ===== */
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            generateStars();
+        }
+        function generateStars() {
+            stars = [];
+            const count = Math.floor((canvas.width * canvas.height) / 4500);
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 1.5 + 0.3,
+                    twinkle: Math.random() * Math.PI * 2
+                });
+            }
+        }
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const s of stars) {
+                s.twinkle += 0.04;
+                const alpha = 0.3 + Math.abs(Math.sin(s.twinkle)) * 0.7;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 240, 250, ${alpha})`;
+                ctx.fill();
+            }
+            requestAnimationFrame(drawStars);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        drawStars();
+
+        /* ===== Janela ===== */
         document.getElementById('btn-minimize').addEventListener('click', () => ipcRenderer.send('window-minimize'));
         document.getElementById('btn-close').addEventListener('click', () => ipcRenderer.send('window-close'));
-        
-        // Elementos de Navegação e Telas
+
+        /* ===== Abas ===== */
         const btnLaunch = document.getElementById('nav-launch');
         const btnInstall = document.getElementById('nav-install');
+        const btnMods = document.getElementById('nav-mods');
+        
         const viewLaunchContainer = document.getElementById('view-launch-container');
         const viewInstall = document.getElementById('view-install');
+        const viewMods = document.getElementById('view-mods');
 
-        // Alternância Inteligente de Telas
-        btnLaunch.addEventListener('click', () => {
+        function clearActiveViews() {
+            btnLaunch.classList.remove('active');
             btnInstall.classList.remove('active');
-            btnLaunch.classList.add('active');
+            btnMods.classList.remove('active');
+            
+            viewLaunchContainer.style.display = 'none';
             viewInstall.style.display = 'none';
-            viewLaunchContainer.style.display = 'block'; // Mostra o bloco do Launch completo
+            viewMods.style.display = 'none';
+        }
+
+        btnLaunch.addEventListener('click', () => {
+            clearActiveViews();
+            btnLaunch.classList.add('active');
+            viewLaunchContainer.style.display = 'block';
         });
 
         btnInstall.addEventListener('click', () => {
-            btnLaunch.classList.remove('active');
+            clearActiveViews();
             btnInstall.classList.add('active');
-            viewLaunchContainer.style.display = 'none';  // Oculta o Hero Card e a Grid juntos
-            viewInstall.style.display = 'block';         // Mostra a tela de instalação
+            viewInstall.style.display = 'block';
         });
 
-        // Evento de Iniciar o Jogo (Launch)
+        btnMods.addEventListener('click', () => {
+            clearActiveViews();
+            btnMods.classList.add('active');
+            viewMods.style.display = 'block';
+        });
+
+        /* ===== Launch + decolagem do foguete ===== */
         const playBtn = document.getElementById('play-btn');
+        const rocketWrap = document.querySelector('.rocket-wrap');
+
         playBtn.addEventListener('click', () => {
-            playBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Running...';
-            playBtn.style.opacity = '0.6';
+            playBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Engine Active...';
+            playBtn.style.opacity = '0.7';
             playBtn.disabled = true;
+
+            rocketWrap.classList.add('launching');
+            setTimeout(() => rocketWrap.classList.remove('launching'), 2200);
+
             ipcRenderer.send('start-game');
         });
 
         ipcRenderer.on('game-started', () => {
-            playBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> Launch';
+            playBtn.innerHTML = '<i class="fa-solid fa-jet-fighter-up"></i> Get Started';
             playBtn.style.opacity = '1';
             playBtn.disabled = false;
         });
 
-        // LÓGICA DE SELEÇÃO E INSTALAÇÃO LOCAL DO APK
+        /* ===== Arquivos / progresso ===== */
         let caminhoDoApk = null;
-
         document.getElementById('btn-select-file').addEventListener('click', async () => {
-            // Abre o gerenciador de arquivos nativo via main.js
             caminhoDoApk = await ipcRenderer.invoke('open-file-dialog');
-            
             if (caminhoDoApk) {
                 document.getElementById('selected-file-path').innerText = caminhoDoApk;
                 document.getElementById('btn-start-install').disabled = false;
@@ -197,20 +284,16 @@
         const startInstallBtn = document.getElementById('btn-start-install');
         startInstallBtn.addEventListener('click', () => {
             if (!caminhoDoApk) return;
-
             document.getElementById('install-progress-container').style.display = 'block';
             startInstallBtn.disabled = true;
             startInstallBtn.style.opacity = '0.5';
-            
-            // Dispara para o Electron injetar o caminho no Python
             ipcRenderer.send('install-game', caminhoDoApk);
         });
 
         ipcRenderer.on('install-progress', (event, data) => {
             document.getElementById('install-status-text').innerText = data.status;
             document.getElementById('install-bar').style.width = data.percent + '%';
-            
-            if(data.percent === 100) {
+            if (data.percent === 100) {
                 startInstallBtn.disabled = false;
                 startInstallBtn.style.opacity = '1';
             }
