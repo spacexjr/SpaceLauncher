@@ -1,0 +1,43 @@
+x<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Minecraft Bedrock Launcher</title>
+</head>
+<body>
+    <div class="launcher-card">
+        <div class="logo-area">
+            <h1>MINECRAFT</h1>
+            <span class="version-tag">BEDROCK EDITION</span>
+        </div>
+        
+        <div class="status-container">
+            <p id="status-text">Pronto para jogar</p>
+            <div id="loader" class="loader hidden"></div>
+        </div>
+
+        <button id="play-btn" class="btn-play">JOGAR</button>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+        
+        document.getElementById('play-btn').addEventListener('click', () => {
+            // Muda o estado visual para "Carregando"
+            document.getElementById('status-text').innerText = "Iniciando o Waydroid...";
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('play-btn').disabled = true;
+
+            // Avisa o Electron para rodar o script Python
+            ipcRenderer.send('start-game');
+        });
+
+        ipcRenderer.on('game-started', () => {
+            document.getElementById('status-text').innerText = "Jogo Aberto!";
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('play-btn').disabled = false;
+        });
+    </script>
+</body>
+</html>
