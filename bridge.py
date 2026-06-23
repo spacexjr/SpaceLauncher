@@ -19,7 +19,8 @@ def launch_game():
     if status.returncode != 0:
         print("Iniciando sessão do Waydroid em background...")
         subprocess.Popen(["waydroid", "session", "start"])
-        time.sleep(5)
+        time.sleep(15)  # Aguarda o container iniciar completamente
+        print("Sessão do Waydroid iniciada.")
     
     subprocess.run(["waydroid", "app", "launch", "com.mojang.minecraftpe"])
 
