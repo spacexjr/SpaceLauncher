@@ -9,7 +9,7 @@ function createWindow() {
         width: 1000,
         height: 600,
         resizable: true,
-        frame: false, // Ativa o modo sem bordas (custom top-bar)
+        frame: false, 
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
@@ -19,11 +19,10 @@ function createWindow() {
     mainWindow.loadFile('index.html');
 }
 
-// Gerenciamento dos botões nativos da janela customizada
 ipcMain.on('window-minimize', () => mainWindow.minimize());
 ipcMain.on('window-close', () => mainWindow.close());
 
-// Escuta o pedido da interface para abrir o seletor de arquivos local (APK)
+// Seletor de Arquivos para o APK
 ipcMain.handle('open-file-dialog', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
         title: 'Selecione o APK do Minecraft Bedrock',
@@ -34,12 +33,28 @@ ipcMain.handle('open-file-dialog', async () => {
     });
 
     if (!result.canceled && result.filePaths.length > 0) {
-        return result.filePaths[0]; // Retorna o caminho absoluto do arquivo
+        return result.filePaths[0]; 
     }
     return null;
 });
 
-// Ação de Lançar o Jogo
+// Seletor de Arquivos para Complementos/Mods
+ipcMain.handle('open-mod-dialog', async () => {
+    const result = await dialog.showOpenDialog(mainWindow, {
+        title: 'Selecione complementos do Minecraft (.mcpack, .mcaddon, .mcworld)',
+        properties: ['openFile'],
+        filters: [
+            { name: 'Minecraft Addons & Worlds', extensions: ['mcpack', 'mcaddon', 'mcworld'] }
+        ]
+    });
+
+    if (!result.canceled && result.filePaths.length > 0) {
+        return result.filePaths[0];
+    }
+    return null;
+});
+
+// Lançamento do jogo
 ipcMain.on('start-game', (event) => {
     exec('python3 bridge.py launch', (error) => {
         if (error) console.error(`Erro ao lançar: ${error}`);
@@ -47,9 +62,8 @@ ipcMain.on('start-game', (event) => {
     });
 });
 
-// Ação de Instalar o Jogo via arquivo APK local
+// Instalação do APK
 ipcMain.on('install-game', (event, filePath) => {
-    // Passa o caminho do arquivo entre aspas para evitar quebras por espaços no nome
     const pythonProcess = exec(`python3 bridge.py install "${filePath}"`);
 
     pythonProcess.stdout.on('data', (data) => {
@@ -59,7 +73,6 @@ ipcMain.on('install-game', (event, filePath) => {
             const percent = parts[1];
             const status = parts[2];
             
-            // Retorna o progresso em tempo real para a barra de carregamento no HTML
             mainWindow.webContents.send('install-progress', { 
                 percent: parseInt(percent), 
                 status: status 
@@ -69,6 +82,29 @@ ipcMain.on('install-game', (event, filePath) => {
 
     pythonProcess.stderr.on('data', (data) => {
         console.error(`Erro no script Python: ${data}`);
+    });
+});
+
+// Importação de Modificações e Mapas
+ipcMain.on('import-mod', (event, filePath) => {
+    const pythonProcess = exec(`pkexec python3 "${path.join(__dirname, 'bridge.py')}" import-mod "${filePath}"`);
+
+    pythonProcess.stdout.on('data', (data) => {
+        const output = data.toString().trim();
+        if (output.startsWith("PROGRESS|")) {
+            const parts = output.split("|");
+            const percent = parts[1];
+            const status = parts[2];
+            
+            mainWindow.webContents.send('mod-progress', { 
+                percent: parseInt(percent), 
+                status: status 
+            });
+        }
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`Erro no script Python (Mods): ${data}`);
     });
 });
 

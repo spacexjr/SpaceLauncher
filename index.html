@@ -108,10 +108,10 @@
                     </button>
                 </div>
 
-                <div id="install-progress-container" style="display:none;">
+                <div id="install-progress-container" style="display:none; margin-top:15px;">
                     <p id="install-status-text" style="font-size:0.85rem; color:#ff5c5a; margin-bottom:8px;">Aguardando inicialização da sub-rotina...</p>
                     <div class="progress-track">
-                        <div id="install-bar"></div>
+                        <div id="install-bar" style="background: var(--gradient-cosmic); width: 0%; height: 100%; transition: width 0.2s;"></div>
                     </div>
                 </div>
             </div>
@@ -119,47 +119,50 @@
 
         <div id="view-mods" style="display:none;">
             <div class="dashboard-grid">
-                <div class="card">
+                <div class="card" style="grid-column: span 2;">
                     <div class="card-header">
-                        <h3><i class="fa-solid fa-flask-vial" style="color:#e51a62;"></i> Mods & Módulos</h3>
+                        <h3><i class="fa-solid fa-flask-vial" style="color:#e51a62;"></i> Injetor de Recursos e Mundos</h3>
                     </div>
-                    <div class="card-content empty-state">
-                        <i class="fa-solid fa-box-open placeholder-icon"></i>
-                        <p>Nenhum módulo injetado</p>
+                    <div class="card-content" style="padding:10px 0; display:flex; flex-direction:column; gap:20px;">
+                        <p style="font-size:0.85rem; color:var(--text-muted);">
+                            Selecione arquivos modificadores para o ecossistema Android do Waydroid. Suporta mundos inteiros (.mcworld), agregados (.mcaddon) ou texturas/comportamentos (.mcpack).
+                        </p>
+                        
+                        <div style="display:flex; gap:15px; align-items:center;">
+                            <button id="btn-select-mod" class="nav-btn" style="background-color:#281845; color:#fff; padding:12px 22px; border-radius:30px; border:1px solid var(--border-color);">
+                                <i class="fa-solid fa-file-import" style="color:#ff5c5a;"></i> Escolher Arquivo Mod
+                            </button>
+                            <span id="selected-mod-path" style="font-size:0.85rem; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:350px;">
+                                Nenhum arquivo de mod selecionado...
+                            </span>
+                        </div>
+
+                        <button id="btn-start-mod-import" class="btn-launch" style="padding:14px 35px; font-size:0.95rem; width:fit-content;" disabled>
+                            <i class="fa-solid fa-shuttle-space"></i> Injetar no Minecraft
+                        </button>
+
+                        <div id="mod-progress-container" style="display:none; margin-top:15px;">
+                            <p id="mod-status-text" style="font-size:0.85rem; color:#ff7371; margin-bottom:8px;">Aguardando sinal...</p>
+                            <div class="progress-track">
+                                <div id="mod-bar" style="background: var(--gradient-cosmic); width: 0%; height: 100%; transition: width 0.2s;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <h3><i class="fa-solid fa-layer-group" style="color:#ff5c5a;"></i> Gestão de Setor</h3>
-                        <span class="view-all">Ver Todos <i class="fa-solid fa-arrow-right"></i></span>
+                        <h3><i class="fa-solid fa-layer-group" style="color:#ff5c5a;"></i> Estrutura Alvo</h3>
                     </div>
                     <div class="card-content list-content">
                         <div class="list-item">
-                            <span><i class="fa-solid fa-globe" style="color:#e51a62;"></i> Mundos (Saves)</span>
-                            <span class="count">0 <i class="fa-solid fa-chevron-right"></i></span>
+                            <span><i class="fa-solid fa-globe" style="color:#e51a62;"></i> Mundos (minecraftWorlds)</span>
                         </div>
                         <div class="list-item">
-                            <span><i class="fa-solid fa-wand-magic-sparkles" style="color:#ff5c5a;"></i> Resource Packs</span>
-                            <span class="count">0 <i class="fa-solid fa-chevron-right"></i></span>
+                            <span><i class="fa-solid fa-wand-magic-sparkles" style="color:#ff5c5a;"></i> Recursos (resource_packs)</span>
                         </div>
                         <div class="list-item">
-                            <span><i class="fa-solid fa-brain" style="color:#ff7371;"></i> Behavior Packs</span>
-                            <span class="count">0 <i class="fa-solid fa-chevron-right"></i></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-terminal" style="color:#e51a62;"></i> Repositórios</h3>
-                    </div>
-                    <div class="card-content list-content">
-                        <div class="list-item provider">
-                            <span><i class="fa-solid fa-fire-flame-curved" style="color:#ff5c5a;"></i> CurseForge Matrix</span>
-                        </div>
-                        <div class="list-item provider">
-                            <span><i class="fa-solid fa-cubes" style="color:#e51a62;"></i> Modrinth Node</span>
+                            <span><i class="fa-solid fa-brain" style="color:#ff7371;"></i> Comportamento (behavior_packs)</span>
                         </div>
                     </div>
                 </div>
@@ -271,12 +274,12 @@
             playBtn.disabled = false;
         });
 
-        /* ===== Arquivos / progresso ===== */
+        /* ===== Instalação do APK ===== */
         let caminhoDoApk = null;
         document.getElementById('btn-select-file').addEventListener('click', async () => {
             caminhoDoApk = await ipcRenderer.invoke('open-file-dialog');
             if (caminhoDoApk) {
-                document.getElementById('selected-file-path').innerText = caminhoDoApk;
+                document.getElementById('selected-file-path').innerText = caminhoDoApk.split('/').pop();
                 document.getElementById('btn-start-install').disabled = false;
             }
         });
@@ -296,6 +299,41 @@
             if (data.percent === 100) {
                 startInstallBtn.disabled = false;
                 startInstallBtn.style.opacity = '1';
+                caminhoDoApk = null;
+                document.getElementById('selected-file-path').innerText = "Processo finalizado!";
+            }
+        });
+
+        /* ===== Injeção de Mods & Recursos ===== */
+        let caminhoDoMod = null;
+        const btnSelectMod = document.getElementById('btn-select-mod');
+        const btnStartModImport = document.getElementById('btn-start-mod-import');
+        const modProgressContainer = document.getElementById('mod-progress-container');
+
+        btnSelectMod.addEventListener('click', async () => {
+            caminhoDoMod = await ipcRenderer.invoke('open-mod-dialog');
+            if (caminhoDoMod) {
+                document.getElementById('selected-mod-path').innerText = caminhoDoMod.split('/').pop();
+                btnStartModImport.disabled = false;
+            }
+        });
+
+        btnStartModImport.addEventListener('click', () => {
+            if (!caminhoDoMod) return;
+            modProgressContainer.style.display = 'block';
+            btnStartModImport.disabled = true;
+            btnStartModImport.style.opacity = '0.5';
+            ipcRenderer.send('import-mod', caminhoDoMod);
+        });
+
+        ipcRenderer.on('mod-progress', (event, data) => {
+            document.getElementById('mod-status-text').innerText = data.status;
+            document.getElementById('mod-bar').style.width = data.percent + '%';
+            if (data.percent === 100) {
+                btnStartModImport.disabled = false;
+                btnStartModImport.style.opacity = '1';
+                caminhoDoMod = null;
+                document.getElementById('selected-mod-path').innerText = "Injeção de modificação concluída!";
             }
         });
     </script>
