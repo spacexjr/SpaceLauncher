@@ -118,7 +118,7 @@ Os arquivos são instalados diretamente dentro do armazenamento Android do Waydr
 * O launcher não distribui APKs do Minecraft.
 * É necessário possuir uma cópia legítima do jogo.
 * O desempenho depende da aceleração gráfica do Waydroid.
-* GPUs muito antigas podem apresentar limitações.
+* GPUs muito antigas podem apresentar limitações
 * O .apk tem que ser x86_64
 
 ---
@@ -133,7 +133,7 @@ Os arquivos são instalados diretamente dentro do armazenamento Android do Waydr
 * JavaScript
 * Waydroid
 
----
+--
 
 ## 📜 Licença
 
